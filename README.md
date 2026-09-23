@@ -60,6 +60,10 @@ anime-tv/
 Для собственного видео положи файл в:
 
 
+
+
+
+```text
 var CHANNELS=[
   {name:"Оглянись аниме фильм", type:"youtube", ids:["SU46GSrDvKY"]}, // 1
   {name:"Сага о Винланде", type:"youtube", ids:["FyZpWMsBYGY"]}, // 2
@@ -73,9 +77,6 @@ var CHANNELS=[
   {name:"Ученик Санты", type:"youtube", ids:["guavkH209ng"]}, // 10
 ];
 
-
-```text
-video/
 ```
 
 и добавь его в `CHANNELS`:
