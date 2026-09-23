@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Аниме-ТВ — 10 каналов</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --wall:#8fcf9d; --wall2:#84c793; --dot:rgba(255,255,255,.16); --ticker:#2b5a3b;
+  --frame:#f4ecd6; --floor:#c9985f; --floor2:#b3834f; --base:#f4ecd6;
+  --rug1:#e8a0b4; --rug2:#f7d9a8; --shelf:#9a6a3c; --shelf2:#b98650;
+  --tv1:#e6e0ca; --tv2:#c4bea6; --ink:#1f3a29; --muted:#5d7a66;
+  --paper:#fffaf0; --line:#cfe6cf; --winbg:#dcebd8; --win1:#59b377; --win2:#2b7a4b;
+  --bevel-l:#ffffff; --bevel-d:#5c8368; --win-out:#25503a; --focus:#ff8fb3; --curtain:#f59ab8;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --wall:#2d5741; --wall2:#28503a; --dot:rgba(255,255,255,.06); --ticker:#14281d;
+    --frame:#cfc6ad; --floor:#6b4a2e; --floor2:#5a3d25; --base:#cfc6ad;
+    --rug1:#8a4a62; --rug2:#a88a5a; --shelf:#6e4a28; --shelf2:#8a6035;
+    --tv1:#bfb9a2; --tv2:#9d977f; --ink:#e4f3e2; --muted:#93b39b;
+    --paper:#1d2a22; --line:#2c4034; --winbg:#26382d; --win1:#3f8f5e; --win2:#1d5a37;
+    --bevel-l:#4a6b56; --bevel-d:#0f1a13; --win-out:#0c150f; --focus:#ff8fb3; --curtain:#a44a6a;
+  }
+}
+:root[data-theme="dark"]{
+  --wall:#2d5741; --wall2:#28503a; --dot:rgba(255,255,255,.06); --ticker:#14281d;
+  --frame:#cfc6ad; --floor:#6b4a2e; --floor2:#5a3d25; --base:#cfc6ad;
+  --rug1:#8a4a62; --rug2:#a88a5a; --shelf:#6e4a28; --shelf2:#8a6035;
+  --tv1:#bfb9a2; --tv2:#9d977f; --ink:#e4f3e2; --muted:#93b39b;
+  --paper:#1d2a22; --line:#2c4034; --winbg:#26382d; --win1:#3f8f5e; --win2:#1d5a37;
+  --bevel-l:#4a6b56; --bevel-d:#0f1a13; --win-out:#0c150f; --focus:#ff8fb3; --curtain:#a44a6a;
+}
+*{box-sizing:border-box}
+html{height:100%;background:var(--wall);scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;height:100%;overflow:hidden;background:var(--wall);color:var(--ink);font-family:'Nunito',Verdana,Tahoma,sans-serif}
+
+/* ---------- layout: everything in one window ---------- */
+.app{
+  height:100%;display:grid;grid-template-rows:minmax(0,1fr) var(--panel-h);
+  --panel-h:clamp(160px,28vh,220px);
+  --tv:min(94vw,calc((100vh - var(--panel-h) - 60px)*1.1),720px);
+}
+@supports (height:100dvh){
+  .app{
+    --panel-h:clamp(160px,28dvh,220px);
+    --tv:min(94vw,calc((100dvh - var(--panel-h) - 60px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))*1.1),720px);
+  }
+}
+
+/* ---------- room ---------- */
+.room{
+  position:relative;overflow:hidden;min-height:0;
+  background:
+    radial-gradient(circle at 50% 50%,var(--dot) 0 1.5px,transparent 2px) 0 0/26px 26px,
+    repeating-linear-gradient(90deg,var(--wall) 0 26px,var(--wall2) 26px 52px);
+}
+.ticker{position:absolute;left:0;right:0;top:0;height:22px;z-index:6;overflow:hidden;white-space:nowrap;
+  background:var(--ticker);color:#d8ff9a;border-bottom:2px solid rgba(0,0,0,.25);
+  font:400 12px/22px 'Pixelify Sans','Courier New',monospace}
+.ticker span{display:inline-block;padding-left:100%;animation:tick 40s linear infinite}
+@keyframes tick{to{transform:translateX(-100%)}}
+
+.lights{position:absolute;left:0;right:0;top:22px;height:26px;z-index:3;pointer-events:none}
+.lights::before{content:"";position:absolute;left:0;right:0;top:11px;border-top:2px solid rgba(30,60,42,.45)}
+.lights::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 14px,#ffe89a 0 3px,rgba(255,232,154,.35) 4px 7px,transparent 8px) 0 0/38px 26px repeat-x;
+  animation:twinkle 2.6s steps(2,end) infinite}
+@keyframes twinkle{0%{opacity:1}50%{opacity:.6}100%{opacity:1}}
+
+.floor{position:absolute;left:0;right:0;bottom:0;height:24%;z-index:1;border-top:8px solid var(--base);
+  background:repeating-linear-gradient(90deg,transparent 0 78px,rgba(0,0,0,.14) 78px 80px),linear-gradient(var(--floor),var(--floor2))}
+.rug{position:absolute;left:50%;bottom:1%;width:min(96%,calc(var(--tv)*1.3));height:15%;transform:translateX(-50%);z-index:1;border-radius:50%;
+  background:radial-gradient(ellipse,var(--rug1) 0 42%,var(--rug2) 43% 55%,var(--rug1) 56% 68%,var(--rug2) 69%);opacity:.92}
+
+/* side decorations: only when the room is wide enough */
+.decor{display:none}
+@media (min-width:1150px){
+  .decor{display:block}
+  .window{position:absolute;left:4%;top:20%;z-index:2;width:clamp(100px,14%,190px);aspect-ratio:3/4;
+    border:7px solid var(--frame);border-radius:6px 6px 2px 2px;
+    background:
+      radial-gradient(circle at 72% 24%,#fff6c8 0 6%,transparent 7%),
+      radial-gradient(circle,#fff 0 1px,transparent 1.5px) 8px 10px/24px 26px,
+      linear-gradient(#26306b,#7a4a9a 55%,#f08fa8 85%,#ffd39a);
+    box-shadow:inset 0 0 0 2px rgba(0,0,0,.15),0 5px 0 rgba(0,0,0,.18)}
+  .window::before{content:"";position:absolute;inset:0;
+    background:linear-gradient(var(--frame),var(--frame)) 50% 0/6px 100% no-repeat,linear-gradient(var(--frame),var(--frame)) 0 50%/100% 6px no-repeat}
+  .window::after{content:"";position:absolute;left:-16px;right:-16px;top:-14px;height:16px;border-radius:5px;background:var(--curtain);box-shadow:0 3px 0 rgba(0,0,0,.18)}
+  .poster{position:absolute;right:6%;top:18%;z-index:2;width:clamp(70px,10%,130px);aspect-ratio:2/3;border:4px solid #fff;transform:rotate(3deg);
+    background:linear-gradient(160deg,#f77fa8,#7a5ad8);box-shadow:2px 3px 0 rgba(0,0,0,.22);display:grid;place-items:center;
+    color:#fff;font:600 clamp(26px,3.6vw,48px)/1 'Pixelify Sans','MS Gothic','Yu Gothic',sans-serif;text-shadow:2px 2px 0 rgba(0,0,0,.25)}
+  .shelf{position:absolute;right:4%;top:52%;z-index:2;width:clamp(120px,15%,210px)}
+  .books{display:flex;align-items:flex-end;gap:2px;height:64px;padding:0 6px}
+  .books i{display:block;width:10px;border-radius:1px 1px 0 0;background:hsl(var(--h) 60% 62%);box-shadow:inset -2px 0 0 rgba(0,0,0,.15)}
+  .plank{height:9px;border-radius:2px;background:var(--shelf);box-shadow:0 4px 0 rgba(0,0,0,.18)}
+  .toy{position:absolute;right:10px;bottom:12px;font-size:32px}
+  .plant{position:absolute;left:8%;bottom:5%;z-index:2;font-size:clamp(38px,5vw,66px)}
+  .cat{position:absolute;right:9%;bottom:4%;z-index:2;font-size:clamp(34px,4.4vw,58px)}
+}
+
+/* ---------- the TV ---------- */
+.tvwrap{position:absolute;left:50%;bottom:3%;transform:translateX(-50%);z-index:4;width:var(--tv);--u:calc(var(--tv)/100)}
+.antenna{position:absolute;left:50%;top:0;width:0;height:0}
+.antenna i{position:absolute;left:calc(var(--u)*-.35);bottom:0;width:calc(var(--u)*.7);height:calc(var(--u)*15);
+  background:linear-gradient(90deg,#c4c4c4,#6f6f6f);border-radius:calc(var(--u)*.4);transform-origin:50% 100%}
+.antenna i:nth-child(1){transform:rotate(-32deg)}
+.antenna i:nth-child(2){transform:rotate(30deg)}
+.antenna::after{content:"";position:absolute;left:calc(var(--u)*-4);top:calc(var(--u)*-1.6);width:calc(var(--u)*8);height:calc(var(--u)*2.4);
+  border-radius:50% 50% 0 0;background:#8b8674}
+.tv{position:relative;z-index:1;display:grid;grid-template-columns:1fr calc(var(--u)*14);gap:calc(var(--u)*3);
+  height:calc(var(--u)*64);padding:calc(var(--u)*4);
+  background:linear-gradient(180deg,var(--tv1),var(--tv2));
+  border-radius:calc(var(--u)*5) calc(var(--u)*5) calc(var(--u)*3) calc(var(--u)*3);
+  box-shadow:inset 0 calc(var(--u)*.6) 0 rgba(255,255,255,.55),inset 0 calc(var(--u)*-1) 0 rgba(0,0,0,.18),0 calc(var(--u)*1.2) 0 rgba(0,0,0,.28)}
+.table{position:relative;height:calc(var(--u)*8);width:92%;margin:0 auto;border-radius:calc(var(--u)*1);
+  background:linear-gradient(var(--shelf2),var(--shelf));box-shadow:0 calc(var(--u)*.8) 0 rgba(0,0,0,.22)}
+.table::after{content:"";position:absolute;left:50%;top:50%;width:calc(var(--u)*10);height:calc(var(--u)*1.4);transform:translate(-50%,-50%);
+  border-radius:calc(var(--u)*.7);background:rgba(0,0,0,.28)}
+
+.side{display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(var(--u)*.6) 0}
+.grille{width:100%;height:calc(var(--u)*15);border-radius:calc(var(--u)*1);
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,.34) 0 calc(var(--u)*.6),transparent calc(var(--u)*.6) calc(var(--u)*1.8))}
+.knob{width:calc(var(--u)*9);height:calc(var(--u)*9);border-radius:50%;border:0;padding:0;cursor:pointer;display:grid;place-items:center;
+  background:radial-gradient(circle at 35% 30%,#f8f5e8,#9c9782 72%);color:#4a4a3e;font-size:calc(var(--u)*3.2);line-height:1;
+  box-shadow:0 calc(var(--u)*.8) 0 rgba(0,0,0,.3)}
+.knob:active{transform:translateY(calc(var(--u)*.6));box-shadow:0 calc(var(--u)*.2) 0 rgba(0,0,0,.3)}
+.knob:focus-visible,.go:focus-visible,.ex:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.chlabel{font:600 calc(var(--u)*3)/1 'Pixelify Sans',monospace;color:#4a4a3e}
+.led{width:calc(var(--u)*2);height:calc(var(--u)*2);border-radius:50%;background:#59ff7a;box-shadow:0 0 calc(var(--u)*2) #59ff7a}
+
+/* ---------- screen ---------- */
+.screen{position:relative;height:100%;overflow:hidden;container-type:inline-size;background:#0b120d;
+  border-radius:calc(var(--u)*5)/calc(var(--u)*6);
+  box-shadow:0 0 0 calc(var(--u)*1.2) #1b1f1b,inset 0 0 calc(var(--u)*6) rgba(0,0,0,.7);
+  animation:poweron .8s ease-out both}
+@keyframes poweron{0%{transform:scaleY(.03);filter:brightness(4)}55%{transform:scaleY(1);filter:brightness(2)}100%{transform:none;filter:none}}
+.screen canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;image-rendering:pixelated;opacity:.55}
+.screen[data-s="loading"] canvas,.screen[data-s="result"] canvas{opacity:0}
+.screen.zap canvas{opacity:1;z-index:6}
+.bars{position:absolute;inset:0;z-index:1;display:none;filter:brightness(.75) saturate(.9);
+  background:
+    linear-gradient(#111,#111) 0 82%/100% 18% no-repeat,
+    linear-gradient(90deg,#ddd 0 14.28%,#dd0 14.28% 28.56%,#0dd 28.56% 42.84%,#0d0 42.84% 57.12%,#d0d 57.12% 71.4%,#d00 71.4% 85.68%,#00d 85.68%)}
+.screen[data-s="loading"] .bars{display:block}
+.idle{position:absolute;inset:0;z-index:3;display:grid;place-content:center;justify-items:center;gap:2.5cqw;text-align:center;padding:0 6cqw;
+  color:#c8ffc0;text-shadow:0 0 6px rgba(120,255,140,.7),2px 2px 0 rgba(0,0,0,.6)}
+.idle b{font:600 9cqw/1.05 'Pixelify Sans','MS Gothic','Yu Gothic',monospace}
+.idle span{font:400 4.3cqw/1.3 'Pixelify Sans','Courier New',monospace;background:rgba(0,0,0,.6);padding:1.2cqw 2.2cqw}
+.screen[data-s="result"] .idle{display:none}
+.card{position:absolute;inset:0;z-index:2;display:none;background:#000}
+.screen[data-s="result"] .card{display:block}
+.card video,.card iframe{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover;background:#000}
+.screen[data-s="empty"] .card{display:none}
+.screen[data-s="empty"] .idle{display:grid}
+.screen[data-s="empty"] .idle b{color:#ffb0a8}
+.mute{position:absolute;z-index:9;right:3.5cqw;bottom:8.5cqw;width:9cqw;height:9cqw;min-width:26px;min-height:26px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.5);background:rgba(0,0,0,.55);color:#fff;font-size:4cqw;display:none;align-items:center;justify-content:center;cursor:pointer}
+.screen[data-s="result"] .mute{display:flex}
+.mute:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.osd{position:absolute;left:3.5cqw;right:3.5cqw;z-index:8;display:flex;justify-content:space-between;align-items:center;
+  font:600 3.4cqw/1 'Pixelify Sans','Courier New',monospace;color:#b6ffb0}
+.osd span,.osd a{background:rgba(0,0,0,.62);padding:.6cqw 1.6cqw}
+.osd.top{top:2.4cqw}
+.osd.bot{bottom:2.4cqw}
+.osd a{color:#ffe28a;text-decoration:none}
+.osd a:hover,.osd a:focus-visible{text-decoration:underline}
+.glass{position:absolute;inset:0;z-index:7;pointer-events:none;
+  background:
+    repeating-linear-gradient(180deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px),
+    radial-gradient(ellipse at 50% 42%,transparent 58%,rgba(0,0,0,.5) 100%),
+    linear-gradient(115deg,rgba(255,255,255,.16),transparent 30%)}
+
+/* ---------- remote control panel ---------- */
+.panel{display:flex;justify-content:center;align-items:stretch;padding:0 8px 8px;min-height:0;position:relative;z-index:5}
+.win{width:min(100%,860px);min-height:0;display:flex;flex-direction:column;background:var(--winbg);
+  border:2px solid var(--bevel-l);border-right-color:var(--bevel-d);border-bottom-color:var(--bevel-d);
+  box-shadow:0 0 0 2px var(--win-out),5px 5px 0 rgba(0,0,0,.25)}
+.win.shake{animation:shake .4s}
+@keyframes shake{20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.titlebar{flex:none;display:flex;align-items:center;gap:8px;padding:3px 6px;color:#fff;
+  background:linear-gradient(90deg,var(--win2),var(--win1));font:600 13px/1.4 'Pixelify Sans','Nunito',sans-serif}
+.ttl{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wb{display:flex;gap:3px}
+.wb i{font-style:normal;width:16px;height:14px;text-align:center;font:600 11px/12px 'Pixelify Sans',monospace;color:#1f3a29;background:#dcebd8;
+  border:1px solid #fff;border-right-color:#5c8368;border-bottom-color:#5c8368}
+.body{flex:1;min-height:0;display:grid;grid-template-columns:repeat(5,1fr);grid-auto-rows:1fr;gap:6px;padding:8px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.chbtn{cursor:pointer;border:2px solid #fff;border-right-color:#1b5a33;border-bottom-color:#1b5a33;font-family:'Pixelify Sans','Nunito',sans-serif;
+  background:linear-gradient(#8fdca0,#2f9152);color:#fff;text-shadow:1px 1px 0 rgba(0,0,0,.35);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:0;padding:2px 4px;border-radius:3px}
+.chbtn b{font-size:clamp(14px,2.6vw,22px);line-height:1}
+.chbtn span{font-size:clamp(8px,1.3vw,11px);font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.9}
+.chbtn:active{transform:translate(1px,1px)}
+.chbtn[aria-pressed="true"]{background:linear-gradient(#ffe58a,#e8a020);border-color:#fff #8a5a10 #8a5a10 #fff;color:#3a2500;text-shadow:none}
+.chbtn.off{background:linear-gradient(#cfcfcf,#8a8a8a);color:#eee}
+.chbtn:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+@media (max-width:560px){
+  .body{grid-template-columns:repeat(5,1fr)}
+  .chbtn b{font-size:15px}
+  .chbtn span{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .ticker span,.lights::after,.screen,.win.shake{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="room" aria-label="Уютная аниме-комната">
+    <div class="ticker" aria-hidden="true"><span>★ Добро пожаловать в Аниме-ТВ ★ 10 каналов, которые крутятся круглосуточно ★ Выбери канал на пульте снизу или кнопками ▲▼ на телевизоре ★</span></div>
+    <div class="lights" aria-hidden="true"></div>
+    <div class="floor" aria-hidden="true"></div>
+    <div class="rug" aria-hidden="true"></div>
+
+    <div class="decor" aria-hidden="true">
+      <div class="window"></div>
+      <div class="poster">夢</div>
+      <div class="shelf">
+        <div class="books">
+          <i style="--h:340;height:46px"></i><i style="--h:200;height:58px"></i><i style="--h:50;height:42px"></i><i style="--h:120;height:54px"></i><i style="--h:280;height:48px"></i><i style="--h:20;height:60px"></i><i style="--h:170;height:44px"></i><i style="--h:320;height:56px"></i>
+        </div>
+        <div class="toy">🍥</div>
+        <div class="plank"></div>
+      </div>
+      <div class="plant">🪴</div>
+      <div class="cat">🐈</div>
+    </div>
+
+    <div class="tvwrap">
+      <div class="antenna" aria-hidden="true"><i></i><i></i></div>
+      <div class="tv">
+        <div class="screen" id="screen" data-s="idle">
+          <canvas id="noise" width="96" height="72" aria-hidden="true"></canvas>
+          <div class="bars" aria-hidden="true"></div>
+          <div class="idle"><b id="it">アニメTV</b><span id="is">Выбери канал на пульте ↓</span></div>
+          <div class="card" id="card" role="region" aria-label="Видео канала"></div>
+          <button class="mute" id="mute" type="button" aria-label="Включить звук" aria-pressed="false">🔇</button>
+          <div class="osd top"><span>AV1</span><span id="ch">CH --</span></div>
+          <div class="osd bot"><span id="hint">▶ играет</span><span id="cname"></span></div>
+          <div class="glass"></div>
+        </div>
+        <div class="side">
+          <div class="grille" aria-hidden="true"></div>
+          <button class="knob" id="chUp" type="button" aria-label="Следующий канал">▲</button>
+          <div class="chlabel" aria-hidden="true">CH</div>
+          <button class="knob" id="chDown" type="button" aria-label="Предыдущий канал">▼</button>
+          <div class="led" aria-hidden="true"></div>
+        </div>
+      </div>
+      <div class="table" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <section class="win" id="win">
+      <div class="titlebar"><span aria-hidden="true">📻</span><span class="ttl">Пульт — 10 каналов</span><span class="wb" aria-hidden="true"><i>_</i><i>□</i><i>×</i></span></div>
+      <div class="body" id="remote" role="group" aria-label="Переключатель каналов"></div>
+    </section>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id);};
+
+/* =========================================================================
+   10 КАНАЛОВ — настрой здесь. Каждый элемент массива — один канал.
+   Оставь null, если канал пока не нужен (покажет "нет сигнала").
+
+   Тип "youtube" — ролик(и) с YouTube по их ID (то, что после v= в ссылке,
+   или после youtu.be/). Несколько ID в массиве ids — будут крутиться
+   по кругу друг за другом, как один канал. ИСПОЛЬЗУЙ ТОЛЬКО ОФИЦИАЛЬНЫЕ /
+   ЛИЦЕНЗИОННЫЕ ИСТОЧНИКИ (канал студии, Crunchyroll и т.п.) — эмбед с
+   YouTube не нарушает авторские права, потому что это официальный плеер
+   владельца видео, но сам ролик всё равно должен быть выложен законно.
+
+   Пример:
+     {name:"Опенинги", type:"youtube", ids:["dQw4w9WgXcQ","VIDEO_ID_2"]}
+
+   Тип "file" — твои собственные видеофайлы (на которые у тебя есть права),
+   положенные в папку video/. Несколько файлов в files — крутятся по кругу.
+
+   Пример:
+     {name:"Мой канал", type:"file", files:["ep1.mp4","ep2.mp4"]}
+   ========================================================================= */
+var CHANNELS=[
+  {name:"Оглянись аниме фильм", type:"youtube", ids:["SU46GSrDvKY"]}, // 1
+  {name:"Сага о Винланде", type:"youtube", ids:["FyZpWMsBYGY"]}, // 2
+  {name:"Аниме Дандадан", type:"youtube", ids:["tmT9mYuF86Y"]}, // 3
+  {name:"Охотник на вампиров", type:"youtube", ids:["e1_7Y4xfuDU"]}, // 4
+  {name:"Аниме Эрго Прокси", type:"youtube", ids:["FS4VAzQrJ_c"]}, // 5
+  {name:"Mickey Mouse Cartoon", type:"youtube", ids:["EorJ8cEzsZo"]}, // 6
+  {name:"Потерял Всё", type:"youtube", ids:["or8E48u6csM"]}, // 7
+  {name:"Правда Сноудена Фильм", type:"youtube", ids:["iosNVA6swao"]}, // 8
+  {name:"Призрак в доспехах", type:"youtube", ids:["WXlkcrMsXr0"]}, // 9
+  {name:"Ученик Санты", type:"youtube", ids:["guavkH209ng"]}, // 10
+];
+
+
+/* ================= интерфейс ================= */
+var screen=$('screen'),card=$('card'),win=$('win'),remote=$('remote'),muteBtn=$('mute');
+var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var cur=-1,busy=false,muted=true,fileIdx=0;
+
+var cv=$('noise'),ctx=cv.getContext('2d'),img=ctx.createImageData(96,72),noiseTimer=null;
+function drawNoise(){var d=img.data;for(var i=0;i<d.length;i+=4){var v=Math.random()*255|0;d[i]=v*.85;d[i+1]=v;d[i+2]=v*.85;d[i+3]=255;}ctx.putImageData(img,0,0);}
+function noiseOn(){if(noiseTimer)return;drawNoise();if(!reduce)noiseTimer=setInterval(drawNoise,90);}
+function noiseOff(){if(noiseTimer){clearInterval(noiseTimer);noiseTimer=null;}}
+
+function setIdle(a,b){$('it').textContent=a;$('is').textContent=b;}
+function setState(s){screen.dataset.s=s;if(s==='idle'||s==='empty')noiseOn();else noiseOff();}
+function pad(n){return n<10?'0'+n:''+n;}
+
+function buildRemote(){
+  remote.innerHTML='';
+  for(var i=0;i<10;i++){
+    var ch=CHANNELS[i];
+    var b=document.createElement('button');
+    b.type='button';b.className='chbtn'+(ch?'':' off');
+    b.setAttribute('aria-pressed', i===cur?'true':'false');
+    b.setAttribute('aria-label','Канал '+(i+1)+(ch&&ch.name?': '+ch.name:''));
+    b.innerHTML='<b>'+(i+1)+'</b><span>'+(ch&&ch.name?ch.name:'—')+'</span>';
+    b.addEventListener('click',(function(idx){return function(){tuneTo(idx);};})(i));
+    remote.appendChild(b);
+  }
+}
+
+function markPressed(){
+  var btns=remote.children;
+  for(var i=0;i<btns.length;i++)btns[i].setAttribute('aria-pressed', i===cur?'true':'false');
+}
+
+function ytSrc(ch){
+  var ids=ch.ids||[];
+  if(!ids.length)return '';
+  var pl=ids.join(',');
+  return 'https://www.youtube.com/embed/'+ids[0]+'?autoplay=1&mute='+(muted?1:0)+'&loop=1&playlist='+pl+'&controls=1&modestbranding=1&rel=0&playsinline=1';
+}
+
+function playFile(ch){
+  card.innerHTML='';
+  var v=document.createElement('video');
+  v.autoplay=true;v.muted=muted;v.playsInline=true;v.controls=true;
+  fileIdx=0;
+  v.src='video/'+ch.files[fileIdx];
+  v.addEventListener('ended',function(){
+    fileIdx=(fileIdx+1)%ch.files.length;
+    v.src='video/'+ch.files[fileIdx];
+    v.play().catch(function(){});
+  });
+  v.addEventListener('error',function(){
+    setIdle('Нет сигнала','Файл video/'+ch.files[fileIdx]+' не найден');
+  });
+  card.appendChild(v);
+  v.play().catch(function(){});
+}
+
+function playYoutube(ch){
+  card.innerHTML='';
+  var f=document.createElement('iframe');
+  f.src=ytSrc(ch);
+  f.allow='autoplay; encrypted-media; picture-in-picture';
+  f.allowFullscreen=true;
+  card.appendChild(f);
+}
+
+function tuneTo(i){
+  if(busy||i===cur&&screen.dataset.s==='result')return;
+  var ch=CHANNELS[i];
+  cur=i;markPressed();
+  screen.classList.add('zap');noiseOn();busy=true;
+  $('ch').textContent='CH '+pad(i+1)+'/10';
+  $('cname').textContent=ch&&ch.name?ch.name:'';
+  setTimeout(function(){
+    screen.classList.remove('zap');
+    if(!ch){
+      card.innerHTML='';noiseOn();
+      setIdle('Нет сигнала','Канал '+(i+1)+' не настроен — впиши его в CHANNELS');
+      setState('empty');
+    }else if(ch.type==='youtube'){
+      playYoutube(ch);noiseOff();setState('result');$('hint').textContent='▶ играет';
+    }else if(ch.type==='file'){
+      playFile(ch);noiseOff();setState('result');$('hint').textContent='▶ играет';
+    }
+    busy=false;
+  },260);
+}
+
+function zap(d){
+  var next=(cur<0?0:cur+d+10)%10;
+  tuneTo(next);
+}
+
+muteBtn.addEventListener('click',function(){
+  muted=!muted;
+  muteBtn.textContent=muted?'🔇':'🔊';
+  muteBtn.setAttribute('aria-pressed',muted?'false':'true');
+  muteBtn.setAttribute('aria-label',muted?'Включить звук':'Выключить звук');
+  var v=card.querySelector('video');
+  if(v){v.muted=muted;return;}
+  var ch=CHANNELS[cur];
+  if(ch&&ch.type==='youtube')playYoutube(ch);
+});
+
+$('chUp').addEventListener('click',function(){zap(1);});
+$('chDown').addEventListener('click',function(){zap(-1);});
+
+buildRemote();
+setIdle('アニメTV','Выбери канал на пульте ↓');
+setState('idle');
+})();
+</script>
+</body>
+</html>
